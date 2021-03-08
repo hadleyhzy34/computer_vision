@@ -31,8 +31,8 @@ class BasicBlock(nn.Module):
         out = F.relu(self.bn1(self.conv1(x)))
         out = self.bn2(self.conv2(out))
         # print('out size is: ',out.size())
-        # print("input planes are: ",self.in_planes)
-        # print("output planes are: ",self.planes)
+        print("input planes are: ",self.in_planes)
+        print("output planes are: ",self.planes)
         #add residual only for the same input/output channels
         if self.in_planes == self.planes:
             out += residual
@@ -68,7 +68,9 @@ class ResNet18(nn.Module):
 
     def forward(self, x):
         out = F.relu(self.bn1(self.conv1(x)))
+        # print('input planes number is: ',self.in_planes)
         out = self.layer1(out)
+        # print('second input plane number is: ',self.in_planes)
         out = self.layer2(out)
         out = self.layer3(out)
         out = self.layer4(out)
@@ -116,6 +118,7 @@ def train(dataloader,testloader,epochs,model):
     print('Finished Training')
     torch.save(net.state_dict(),'ResNet18.pth')
 
+
 def dataloader():
     transform = transforms.Compose([transforms.ToTensor(),transforms.Normalize((0.5,),(0.5,))])
 
@@ -162,8 +165,8 @@ def run():
       print(msg)
       return msg
 
-# model = ResNet18(BasicBlock,[2,2,2,2])
-# data_loader,test_loader = dataloader()
-# train(data_loader, test_loader, 1, model)
-run()
+model = ResNet18(BasicBlock,[2,2,2,2])
+data_loader,test_loader = dataloader()
+train(data_loader, test_loader, 1, model)
+# run()
 
